@@ -3,6 +3,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
+import 'package:path/path.dart' as path;
+import 'package:path_provider/path_provider.dart' as syspaths;
+
 class ImageInput extends StatefulWidget {
   const ImageInput({Key? key}) : super(key: key);
 
@@ -17,6 +20,17 @@ class _ImageInputState extends State<ImageInput> {
     final picker = ImagePicker();
     final imageFile =
         await picker.getImage(source: ImageSource.camera, maxWidth: 600);
+    // await picker.pickImage(source: ImageSource.camera, maxWidth: 600);
+    setState(() {
+      _storedImage = File(imageFile!.path);
+    });
+
+    // get the app directory inside the phone
+    final appDir = await syspaths.getApplicationDocumentsDirectory();
+
+    final imageName = path.basename(imageFile!.path); // get the image name
+    final pathToSave = appDir.path;
+    final savedImage = await _storedImage!.copy('${appDir.path}/$imageName');
   }
 
   @override
