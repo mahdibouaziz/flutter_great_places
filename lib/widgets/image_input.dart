@@ -23,14 +23,19 @@ class _ImageInputState extends State<ImageInput> {
     final imageFile =
         await picker.getImage(source: ImageSource.camera, maxWidth: 600);
     // await picker.pickImage(source: ImageSource.camera, maxWidth: 600);
+
+    if (imageFile == null) {
+      return;
+    }
+
     setState(() {
-      _storedImage = File(imageFile!.path);
+      _storedImage = File(imageFile.path);
     });
 
     // get the app directory inside the phone
     final appDir = await syspaths.getApplicationDocumentsDirectory();
 
-    final imageName = path.basename(imageFile!.path); // get the image name
+    final imageName = path.basename(imageFile.path); // get the image name
     final pathToSave = '${appDir.path}/$imageName';
     final savedImage = await _storedImage!.copy(pathToSave);
     widget.onSelectImage(savedImage);
